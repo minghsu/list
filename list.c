@@ -396,9 +396,36 @@ LIST_ERROR_E list_destory(LIST_HANDLE a_lst_hnd)
     return LIST_ERR_INVALID_HANDLE;
 }
 
+void *list_get_by_index(LIST_HANDLE a_lst_hnd, LIST_INDEX a_index)
+{
+    LIST_INDEX index = 0;
+    LIST_ITEM_T *p_item = NULL;
+    LIST_HANDLE_T *p_lst_hnd = (LIST_HANDLE_T *)a_lst_hnd;
+
+    if (!p_lst_hnd)
+    {
+        return NULL;
+    }
+
+    if (a_index < 0 || a_index >= p_lst_hnd->count)
+    {
+        return NULL;
+    }
+
+    p_item = p_lst_hnd->head;
+
+    while (p_item && index < a_index)
+    {
+        index++;
+        p_item = p_item->list.next;
+    }
+
+    return p_item->data.data;
+}
+
 LIST_INDEX list_search(LIST_HANDLE a_lst_hnd, void *ap_data, LIST_SIZE a_size)
 {
-    u_int64_t index = 0;
+    LIST_INDEX index = 0;
     u_int32_t hash = 0;
     LIST_ITEM_T *p_item = NULL;
 
@@ -419,7 +446,10 @@ LIST_INDEX list_search(LIST_HANDLE a_lst_hnd, void *ap_data, LIST_SIZE a_size)
     {
         if (hash == p_item->data.hash)
         {
-            return index;
+            if (memcmp(ap_data, p_item->data.data, a_size) == 0)
+            {
+                return index;
+            }
         }
 
         index++;

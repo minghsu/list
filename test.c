@@ -43,8 +43,8 @@ void get_crc32_tbl(void)
 
 int test_list(int model)
 {
-    unsigned int count = (rand() % 10) + 1;                // 1 ~ 1000
-    unsigned int test_search_index = (rand() % count) + 1; // 1 ~ count
+    unsigned int count = (rand() % 100) + 1;           // 1 ~ 1000
+    unsigned int test_search_index = (rand() % count); // 0 ~ count-1
     int test_search_match_index = -1;
     // unsigned int count = 10;
     TEST_LIST_ITEM_T *test_item = NULL;
@@ -53,10 +53,8 @@ int test_list(int model)
     printf("Count: %u, Test Index: %u\n", count, test_search_index);
     u_int64_t list = list_initial();
 
-    // add test item
-
-    printf("Start Timestamp: %d\n", (int)time(NULL));
-    // for (unsigned int i = count; i < 0; i--)
+    // printf("Start Timestamp: %d\n", (int)time(NULL));
+    //  for (unsigned int i = count; i < 0; i--)
     for (unsigned int i = 0; i < count; i++)
     {
         LIST_MALLOC(test_item, sizeof(TEST_LIST_ITEM_T));
@@ -70,22 +68,28 @@ int test_list(int model)
             else
                 list_push_head(list, test_item, sizeof(TEST_LIST_ITEM_T));
 
-            // printf("ADD > Item: %p, Data: %p, Size: %d\n", test_item, test_item->data, test_item->size);
+            printf("ADD > Item: %p, Data: %p, Size: %d\n", test_item, test_item->data, test_item->size);
 
-            if ((i + 1) == test_search_index)
+            if (i == test_search_index)
             {
                 memset(&test_search_item, 0, sizeof(TEST_LIST_ITEM_T));
                 memcpy(&test_search_item, test_item, sizeof(TEST_LIST_ITEM_T));
             }
         }
     }
-    printf("End Timestamp: %d\n", (int)time(NULL));
+    // printf("End Timestamp: %d\n", (int)time(NULL));
 
-    list_dump(list);
+    // list_dump(list);
 
     printf("search item data: %p, size: %d\n", test_search_item.data, test_search_item.size);
     test_search_match_index = list_search(list, (void *)&test_search_item, sizeof(TEST_LIST_ITEM_T));
     printf("search result: %d\n", test_search_match_index);
+
+    test_item = list_get_by_index(list, test_search_match_index);
+    if (test_item)
+    {
+        printf("Data: %p (%u)\n", test_item->data, test_item->size);
+    }
 
     // free test item
     test_item = list_pop_head(list);

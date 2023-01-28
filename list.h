@@ -83,12 +83,21 @@ typedef struct
 
 LIST_HANDLE list_initial(void);
 LIST_ERROR_E list_destory(LIST_HANDLE a_lst_hnd);
+
+// push & pop
 LIST_ERROR_E list_push_head(LIST_HANDLE a_lst_hnd, void *ap_data, LIST_SIZE a_size);
 LIST_ERROR_E list_push_tail(LIST_HANDLE a_lst_hnd, void *ap_data, LIST_SIZE a_size);
 void *list_pop_head(LIST_HANDLE a_lst_hnd);
 void *list_pop_tail(LIST_HANDLE a_lst_hnd);
-LIST_INDEX list_search(LIST_HANDLE a_lst_hnd, void *ap_data, LIST_SIZE a_size);
+
+// utility
 LIST_COUNT list_count(LIST_HANDLE a_lst_hnd);
+LIST_INDEX list_search(LIST_HANDLE a_lst_hnd, void *ap_data, LIST_SIZE a_size);
+void *list_get_by_index(LIST_HANDLE a_lst_hnd, LIST_INDEX a_index);
+
+// memory utility
 void *list_malloc(LIST_SIZE a_size, int8_t *ap_file, LIST_INDEX a_line);
 void list_free(void *ap_ptr, int8_t *ap_file, LIST_INDEX a_line);
+
+// debug
 void list_dump(LIST_HANDLE a_lst_hnd);
